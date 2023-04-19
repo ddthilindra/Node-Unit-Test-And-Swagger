@@ -1,0 +1,230 @@
+openapi: 3.0.3
+info:
+  title: Swagger User API Docs
+  description: |-
+    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: "Amazing developers"
+    email: deshitha.hewa@ddthilindra.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: More important link
+  url: http://localhost:4000/
+servers:
+  - url: "http://localhost:4000/"
+    description: Local server
+  - url: "http://company.com/"
+    description: Company server
+tags:
+  - name: user
+    description: Everything about user
+    externalDocs:
+      description: Find out more
+      # url: http://swagger.io
+  - name: file
+    description: Access to file
+    externalDocs:
+      description: Find out more about our store
+      # url: http://swagger.io
+
+paths:
+  #In Headers
+  /string:
+    get:
+      tags:
+        - user
+      summary: Header token
+      parameters:
+        - name: token
+          in: header
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful Response
+        400:
+          description: Not found
+        500:
+          description: Server Error
+
+  #Returns an array of Users
+  /users:
+    get:
+      tags:
+        - user
+      summary: Returns a list of users.
+      description: People Who are already registered
+      responses:
+        200: # status code
+          description: Successul Response
+        400:
+          description: Not found
+        500:
+          description: Server Error
+
+  #Get Request with path id
+  /users/{userId}:
+    get:
+      tags:
+        - user
+      summary: Returns a user by ID.
+      description: Returns the Specific User
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+        400:
+          description: Not found
+        500:
+          description: Server Error
+    put:
+      tags:
+        - user
+      summary: Update user by ID.
+      description: Update user by ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Update user name
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+      responses:
+        200:
+          description: OK
+        400:
+          description: Not found
+        500:
+          description: Server Error
+    delete:
+      tags:
+        - user
+      summary: Delete user by ID.
+      description: Delete user by ID.
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: token
+          in: header
+          description: ''
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+        400:
+          description: Not found
+        500:
+          description: Server Error
+
+  #Defining Body Reference
+  /users/create:
+    post:
+      tags:
+        - user
+      summary: Adds a new user
+      description: Adds a new user
+      requestBody:
+        description: Create a new user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        required: true
+      responses:
+        200:
+          description: OK
+        400:
+          description: Not found
+        500:
+          description: Server Error
+
+  #Query
+  #Get Query
+  /usersQuery:
+    get:
+      tags:
+        - user
+      summary: Returns a user by ID.
+      description: Returns the Specific User
+      parameters:
+        - in: query
+          name: id
+          type: integer
+          required: true
+      responses:
+        200:
+          description: OK
+        400:
+          description: Not found
+        500:
+          description: Server Error
+
+  #File Upload Multiform Data
+  /upload:
+    post:
+      tags:
+        - file
+      summary: uploads an image
+      description: ''
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: integer
+                fileName:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Successful Response
+        400:
+          description: User Error
+        500:
+          description: Internal Server Error
+
+components:
+  # $ref: ./component.yaml
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+
