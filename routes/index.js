@@ -1,4 +1,5 @@
 const router = require("express").Router();
+
 var users = [
   { id: 1, name: "Tom, Cruise" },
   { id: 2, name: "John Cena" },
