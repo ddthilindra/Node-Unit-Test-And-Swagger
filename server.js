@@ -21,9 +21,11 @@ app.use(fileUpload());
 
 app.use('/', indexRoutes);
 
-// Count the total number of APIs 
+// Count the total number of API endpoints 
 const routes = listEndpoints(app);
+
 let totalAPIs = 0;
+
 routes.forEach(route => {
     const routeMethods = route.methods.filter(method => method !== 'OPTIONS');
     totalAPIs += routeMethods.length;

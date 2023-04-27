@@ -16,15 +16,15 @@ describe("User API", () => {
    */
 
   describe("GET /users", () => {
+    apiCount++;
+
     it("It should GET all users", (done) => {
       chai
         .request(server.app)
         .get("/users")
         .end((err, res) => {
-          //   res.should.have.status(200);
-          //   res.body.should.be.a("array");
-          //   res.body.length.should.be.eq(2);
-          apiCount++;
+          
+
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -33,14 +33,14 @@ describe("User API", () => {
           done();
         });
     });
-
+    
+    // check invalid route
     it("It should NOT GET all users", (done) => {
       chai
         .request(server.app)
         .get("/usersdata")
         .end((err, res) => {
-          //   res.should.have.status(404);
-
+          
           expect(err).to.be.null;
           expect(res).to.have.status(404);
 
@@ -54,18 +54,15 @@ describe("User API", () => {
    * */
 
   describe("GET /users/:id", () => {
+    apiCount++;
+
     it("It should GET a user by id", (done) => {
       const uid = 1;
       chai
         .request(server.app)
         .get("/users/" + uid)
-        .end((err, res) => {
-          //   res.should.have.status(200);
-          //   res.body.should.be.a("object");
-          //   res.body.should.have.property("id");
-          //   res.body.should.have.property("name");
-          //   res.body.should.have.property("id").eq(1);
-          apiCount++;
+        .end((err, res) => {          
+
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -84,9 +81,7 @@ describe("User API", () => {
         .request(server.app)
         .get("/users/" + uid)
         .end((err, res) => {
-          //   res.should.have.status(404);
-          //   res.text.should.be.eq("User does not exist");
-
+          
           expect(err).to.be.null;
           expect(res).to.have.status(404);
           expect(res.text).to.be.eq("User does not exist");
@@ -100,6 +95,8 @@ describe("User API", () => {
    */
 
   describe("POST /users/create", () => {
+    apiCount++;
+
     it("It should POST a new user", (done) => {
       const user = {
         name: "AAAAAAA",
@@ -108,14 +105,8 @@ describe("User API", () => {
         .request(server.app)
         .post("/users/create")
         .send(user)
-        .end((err, res) => {
-          // res.should.have.status(201);
-          // res.body.should.be.a("object");
-          // res.body.should.have.property("id");
-          // res.body.should.have.property("name");
-          // res.body.should.have.property("id").eq(3);
-          // res.body.should.have.property("name").eq("AAAAAAA");
-          apiCount++;
+        .end((err, res) => {          
+
           expect(err).to.be.null;
           expect(res).to.have.status(201);
           expect(res).to.be.json;
@@ -138,9 +129,7 @@ describe("User API", () => {
         .post("/users/create")
         .send(user)
         .end((err, res) => {
-          // res.should.have.status(400);
-          // res.text.should.be.eq("User name required");
-
+          
           expect(err).to.be.null;
           expect(res).to.have.status(400);
           expect(res.text).to.be.eq("User name required");
@@ -155,6 +144,8 @@ describe("User API", () => {
    */
 
   describe("PUT /users/:id", () => {
+    apiCount++;
+
     it("It should PUT a new user", (done) => {
       const uid = 1;
       const user = {
@@ -164,14 +155,8 @@ describe("User API", () => {
         .request(server.app)
         .put("/users/" + uid)
         .send(user)
-        .end((err, res) => {
-          // res.should.have.status(200);
-          // res.body.should.be.a("object");
-          // res.body.should.have.property("id");
-          // res.body.should.have.property("name");
-          // res.body.should.have.property("id").eq(uid);
-          // res.body.should.have.property("name").eq("AAAAAAA");
-          apiCount++;
+        .end((err, res) => {         
+      
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -195,9 +180,7 @@ describe("User API", () => {
         .put("/users/" + uid)
         .send(user)
         .end((err, res) => {
-          // res.should.have.status(400);
-          // res.text.should.be.eq("User name should be at least 3 characters");
-
+          
           expect(err).to.be.null;
           expect(res).to.have.status(400);
           expect(res.text).to.be.eq(
@@ -214,17 +197,15 @@ describe("User API", () => {
    */
 
   describe("DELETE /users/:id", () => {
+    apiCount++;
+
     it("It should DELETE a user", (done) => {
       const uid = 1;
       chai
         .request(server.app)
         .delete("/users/" + uid)
-        .end((err, res) => {
-          // res.should.have.status(200);
-          // res.body.should.be.a("object");
-          // res.body.should.have.property("id");
-          // res.body.should.have.property("name");
-          apiCount++;
+        .end((err, res) => {          
+
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -237,7 +218,7 @@ describe("User API", () => {
     });
   });
   after(function () {
-    
+    // Print the testing coverage
     console.log(apiCount + " APIs tested out of " + server.totalAPIs);
     console.log(
       `API testing coverage: ${((apiCount / server.totalAPIs) * 100).toFixed(2)}%`
