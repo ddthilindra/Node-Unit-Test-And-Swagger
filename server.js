@@ -4,6 +4,7 @@ const swaggerUI = require("swagger-ui-express");
 // const swaggerJsDoc = require("swagger-jsdoc");
 const indexRoutes = require('./routes/index');
 const listEndpoints = require('express-list-endpoints');
+const bodyParser = require('body-parser');
 
 
 // ###### YAML JS ########
@@ -11,6 +12,7 @@ const YAML = require("yamljs");
 const swaggerJsDoc = YAML.load("./api.yaml");
 
 const app = express();
+app.use(bodyParser.json());
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc));
 

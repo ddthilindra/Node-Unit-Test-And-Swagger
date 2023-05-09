@@ -28,7 +28,7 @@ The documentation is live at [localhost:4000/api-docs/](http://localhost:4000/ap
 ```
 # Run in prod mode
 
-mocha test/user.js
+mocha test/user.js (Before run: npm install -g mocha)
 
 or
 

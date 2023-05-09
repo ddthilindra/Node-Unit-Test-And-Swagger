@@ -5,6 +5,131 @@ var users = [
   { id: 2, name: "John Cena" },
 ];
 
+// Dev test route TDD
+router.get("/test", async (req, res) => {
+  /**
+   * View All accounts
+   * [GET /v1/accounts/{fields}=id,privateName,publicName,owner,type,tier,status,tracking,theme,
+   * coach,coachingType,converstionMessage,pushNotifications,requireLearnerConfirmation,description,
+   * pin,createdAt,updatedAt,contractStartDate,contractEndDate,
+   * NumberOfLicenses,licensesConsumed,licensesPurchased&{filters}=accountType]
+   */
+  const result = [
+    {
+      id: "123fsd23fs",
+      createdAt: "2023-04-26T08:40:51.620Z",
+      updatedAt: "2023-04-26T08:40:51.620Z",
+      detail: {
+        publicName: "Test Account",
+        privateName: "1 Test Account",
+        description: "This is a test account to test the API.",
+        pin: "15325",
+        accountOwner: {
+          name: "Tom Broody",
+          id: "2345sdsf345fs2",
+        },
+        accountType: {
+          name: "Public Sector",
+          id: 1,
+        },
+        accountTier: {
+          name: "Tier 1",
+          id: 1,
+        },
+        coach: {
+          name: "Shannon",
+          id: "63sdg4f345fs2",
+        },
+        coachType: {
+          name: "Public Sector",
+          id: 1,
+        },
+        settings: {
+          conversationMessages: {
+            number: "+61378976357492",
+          },
+          brandingTheme: {
+            name: "Cell-Ed (Default)",
+            id: 1,
+          },
+          allowNewUsers: false,
+          automaticallyInactivateLearners: false,
+          restrictedAccount: false,
+          pushNotifications: false,
+          requireLearnerConfirmation: false,
+        },
+        healthData: {
+          activityTracking: false,
+        },
+      },
+      license: {
+        contractName: "Contract 1",
+        numberOfLicenses: 10000,
+        allowRollover: false,
+        contractStartDate: "2023-04-26T00:00:00.000Z",
+        contractEndDate: "2025-04-26T00:00:00.000Z",
+      },
+    },
+    {
+      id: "223fsd23fs",
+      createdAt: "2023-04-26T08:40:51.620Z",
+      updatedAt: "2023-04-26T08:40:51.620Z",
+      detail: {
+        publicName: "Test Account",
+        privateName: "1 Test Account",
+        description: "This is a test account to test the API.",
+        pin: "15325",
+        accountOwner: {
+          name: "Jeff Broody",
+          id: "2345sdsf345fs2",
+        },
+        accountType: {
+          name: "Public Sector",
+          id: 1,
+        },
+        accountTier: {
+          name: "Tier 1",
+          id: 1,
+        },
+        coach: {
+          name: "Sarah",
+          id: "443g4f345fs2",
+        },
+        coachType: {
+          name: "Public Sector",
+          id: 1,
+        },
+        settings: {
+          conversationMessages: {
+            number: "+61378976357492",
+          },
+          brandingTheme: {
+            name: "Cell-Ed (Default)",
+            id: 1,
+          },
+          allowNewUsers: false,
+          automaticallyInactivateLearners: false,
+          restrictedAccount: false,
+          pushNotifications: false,
+          requireLearnerConfirmation: false,
+        },
+        healthData: {
+          activityTracking: false,
+        },
+      },
+      license: {
+        contractName: "Contract 2",
+        numberOfLicenses: 10000,
+        allowRollover: false,
+        contractStartDate: "2023-04-26T00:00:00.000Z",
+        contractEndDate: "2025-04-26T00:00:00.000Z",
+      },
+    },
+  ];
+
+  res.status(200).send(result);
+});
+
 router.get("/string", (req, res) => {
   console.log(req.headers);
   res.status(200).send("Success");

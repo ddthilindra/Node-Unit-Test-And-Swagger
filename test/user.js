@@ -10,6 +10,39 @@ chai.use(chaiHttp);
 
 let apiCount = 0;
 
+// TDD
+describe("Test Dev Response", () => {
+  it("It should return all required JSON keys provided by the query parameter.", (done) => {
+    chai
+      .request(server.app)
+      .get("/test")
+      .query({ id: "123fsd23fs", privateName:"1 Test Account" })
+      .end((err, res) => {
+
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+
+        // query parameter and response key
+        if(expect(res.request).to.have.property('url').that.includes("id")){
+          expect(res.body.every(key => key.should.have.property("id"))).to.be.true;
+
+          //value check
+          expect(res.body.some(key => key.id === "123fsd23fs")).to.be.true;
+        };
+
+        // deep.property
+        if(expect(res.request).to.have.property('url').that.includes("privateName")){
+          expect(res.body.every(key => key.should.have.property("detail").deep.property("settings"))).to.be.true;
+        };
+
+        done();
+      });
+  });
+
+});
+
+
 describe("User API", () => {
   /**
    * Test GET Route
@@ -23,8 +56,6 @@ describe("User API", () => {
         .request(server.app)
         .get("/users")
         .end((err, res) => {
-          
-
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -33,14 +64,13 @@ describe("User API", () => {
           done();
         });
     });
-    
+
     // check invalid route
     it("It should NOT GET all users", (done) => {
       chai
         .request(server.app)
         .get("/usersdata")
         .end((err, res) => {
-          
           expect(err).to.be.null;
           expect(res).to.have.status(404);
 
@@ -61,8 +91,7 @@ describe("User API", () => {
       chai
         .request(server.app)
         .get("/users/" + uid)
-        .end((err, res) => {          
-
+        .end((err, res) => {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -81,7 +110,6 @@ describe("User API", () => {
         .request(server.app)
         .get("/users/" + uid)
         .end((err, res) => {
-          
           expect(err).to.be.null;
           expect(res).to.have.status(404);
           expect(res.text).to.be.eq("User does not exist");
@@ -105,8 +133,7 @@ describe("User API", () => {
         .request(server.app)
         .post("/users/create")
         .send(user)
-        .end((err, res) => {          
-
+        .end((err, res) => {
           expect(err).to.be.null;
           expect(res).to.have.status(201);
           expect(res).to.be.json;
@@ -129,7 +156,6 @@ describe("User API", () => {
         .post("/users/create")
         .send(user)
         .end((err, res) => {
-          
           expect(err).to.be.null;
           expect(res).to.have.status(400);
           expect(res.text).to.be.eq("User name required");
@@ -155,8 +181,7 @@ describe("User API", () => {
         .request(server.app)
         .put("/users/" + uid)
         .send(user)
-        .end((err, res) => {         
-      
+        .end((err, res) => {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -180,7 +205,6 @@ describe("User API", () => {
         .put("/users/" + uid)
         .send(user)
         .end((err, res) => {
-          
           expect(err).to.be.null;
           expect(res).to.have.status(400);
           expect(res.text).to.be.eq(
@@ -204,8 +228,7 @@ describe("User API", () => {
       chai
         .request(server.app)
         .delete("/users/" + uid)
-        .end((err, res) => {          
-
+        .end((err, res) => {
           expect(err).to.be.null;
           expect(res).to.have.status(200);
           expect(res).to.be.json;
@@ -221,7 +244,11 @@ describe("User API", () => {
     // Print the testing coverage
     console.log(apiCount + " APIs tested out of " + server.totalAPIs);
     console.log(
-      `API testing coverage: ${((apiCount / server.totalAPIs) * 100).toFixed(2)}%`
+      `API testing coverage: ${((apiCount / server.totalAPIs) * 100).toFixed(
+        2
+      )}%`
     );
   });
 });
+
+
