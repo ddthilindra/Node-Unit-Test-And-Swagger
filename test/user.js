@@ -12,12 +12,11 @@ let apiCount = 0;
 
 // ###### TDD ######
 describe("Test TDD", () => {
-
   /**
    * Test API fields & keys
    */
 
-  // define fields & keys
+  // define fields
   const fields = [
     "id",
     "privateName",
@@ -42,36 +41,58 @@ describe("Test TDD", () => {
     "licensesConsumed",
     "licensesPurchased",
     "accountType",
-  ];  
-  const keys = ["id", "createdAt", "updatedAt", "detail", "license"];
-  const deepKeys = [
-    "privateName",
-    "publicName",
-    "description",
-    "pin",
-    "accountOwner",
-    "accountType",
-    "accountTier",
-    "coach",
-    "coachType",
-    "settings",
-    "healthData",
-    "contractName",
-    "numberOfLicenses",
-    "allowRollover",
-    "contractStartDate",
-    "contractEndDate",
   ];
-
+  
   it("It should return all required JSON keys provided by the fields in request query.", (done) => {
     chai
       .request(server.app)
       .get("/test")
-      .query({ fields: fields.join(',') })
+      .query({ fields: fields.join(",") })
       .end((err, res) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         expect(res).to.be.json;
+        expect(res.body).to.be.an("array");
+
+        function checkAPI(obj) {
+          fields.forEach((field) => {
+            expect(res.request.url).to.include(field) // check field has expected fields
+            if (field in obj) {
+              expect(res.body.every((key) => key.should.have.property(field))).to.be.true; // check response has expected keys
+
+              
+            Object.keys(obj).forEach((key) => {
+              if ( obj[key] !== undefined && obj[key] !== null && typeof obj[key] === "object" ) {
+                if (field in obj[key]) {
+                  var prop = key;
+
+                  expect(res.body.every(key => key.should.have.property(prop).deep.property(field))).to.be.true; // check detail object has expected keys
+
+                  Object.keys(obj.detail).forEach((key) => {
+                    if ( obj.detail[key] !== undefined &&  obj.detail[key] !== null && typeof obj.detail[key] === "object" ) {
+                      for (const subkey in obj.detail[key]) {
+                        if (fields.includes(subkey)) {
+                          var val = key;
+                          expect(res.body.every(key => key.should.have.property("detail").deep.property(val).deep.property(subkey))).to.be.true; // check the key of sub object under detail object
+                        }
+                      }
+                    }
+                  });
+                }
+              }
+            });
+            }
+
+          });
+        }
+
+        res.body.forEach((item) => {
+          checkAPI(item);
+        });
+
+        done();
+
+        // #### SOURCE ####
 
         // // fields and response key
         // if(expect(res.request).to.have.property('url').that.includes("id")){
@@ -85,39 +106,11 @@ describe("Test TDD", () => {
         // if(expect(res.request).to.have.property('url').that.includes("privateName")){
         //   expect(res.body.every(key => key.should.have.property("detail").deep.property("settings"))).to.be.true;
         // };
-
-        // ##################################################################################
-
-        function checkAPI(obj) {
-          fields.forEach((field) => {
-            keys.forEach((resKey) => {
-              deepKeys.forEach((deepKey) => {
-                Object.keys(obj).forEach((key) => {
-
-                  expect(res.request.url).to.include(field) // check field has expected fields
-                  expect(res.body.every(key => key.should.have.property(resKey))).to.be.true; // check response has expected keys
-
-                  if ( obj[key] !== undefined && obj[key] !== null && typeof obj[key] === "object" && key === resKey ) {
-                    if (deepKey in obj[key]) { // check deepKeys in object
-
-                      expect(res.body.every(key => key.should.have.property(resKey).deep.property(deepKey))).to.be.true;
-
-                    }
-                  }
-                });
-              });
-            });
-          });
-        }
-
-        res.body.forEach((item) => {
-          checkAPI(item);
-        });
-
-        done();
       });
   });
 });
+
+// API Testing and test coverage
 
 // describe("User API", () => {
 //   /**
