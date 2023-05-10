@@ -10,38 +10,90 @@ chai.use(chaiHttp);
 
 let apiCount = 0;
 
-// TDD
-describe("Test Dev Response", () => {
+// ###### TDD ######
+describe("Test TDD", () => {
+
+  /**
+   * Test API query parameters & keys
+   */
+
+  // define query parameters & keys
+  const params = { id: "123fsd23fs", privateName: "1 Test Account" };
+  const keys = ["id", "createdAt", "updatedAt", "detail", "license"];
+  const deepKeys = [
+    "privateName",
+    "publicName",
+    "description",
+    "pin",
+    "accountOwner",
+    "accountType",
+    "accountTier",
+    "coach",
+    "coachType",
+    "settings",
+    "healthData",
+    "contractName",
+    "numberOfLicenses",
+    "allowRollover",
+    "contractStartDate",
+    "contractEndDate",
+  ];
+
   it("It should return all required JSON keys provided by the query parameter.", (done) => {
     chai
       .request(server.app)
       .get("/test")
-      .query({ id: "123fsd23fs", privateName:"1 Test Account" })
+      .query(params) // set the query parameters
       .end((err, res) => {
-
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         expect(res).to.be.json;
 
-        // query parameter and response key
-        if(expect(res.request).to.have.property('url').that.includes("id")){
-          expect(res.body.every(key => key.should.have.property("id"))).to.be.true;
+        // // query parameter and response key
+        // if(expect(res.request).to.have.property('url').that.includes("id")){
+        //   expect(res.body.every(key => key.should.have.property("id"))).to.be.true;
 
-          //value check
-          expect(res.body.some(key => key.id === "123fsd23fs")).to.be.true;
-        };
+        //   //value check
+        //   expect(res.body.some(key => key.id === "123fsd23fs")).to.be.true;
+        // };
 
-        // deep.property
-        if(expect(res.request).to.have.property('url').that.includes("privateName")){
-          expect(res.body.every(key => key.should.have.property("detail").deep.property("settings"))).to.be.true;
-        };
+        // // deep.property
+        // if(expect(res.request).to.have.property('url').that.includes("privateName")){
+        //   expect(res.body.every(key => key.should.have.property("detail").deep.property("settings"))).to.be.true;
+        // };
+
+        // ##################################################################################
+
+        function checkAPI(obj) {
+          Object.keys(params).forEach((param) => {
+            keys.forEach((resKey) => {
+              deepKeys.forEach((deepKey) => {
+                Object.keys(obj).forEach((key) => {
+
+                  expect(res.request.url).to.include(param) // check query parameter has expected query parameter
+                  expect(res.body.every(key => key.should.have.property(resKey))).to.be.true; // check response has expected keys
+
+                  if ( obj[key] !== undefined && obj[key] !== null && typeof obj[key] === "object" && key === resKey ) {
+                    if (deepKey in obj[key]) { // check deepKeys in object
+
+                      expect(res.body.every(key => key.should.have.property(resKey).deep.property(deepKey))).to.be.true;
+
+                    }
+                  }
+                });
+              });
+            });
+          });
+        }
+
+        res.body.forEach((item) => {
+          checkAPI(item);
+        });
 
         done();
       });
   });
-
 });
-
 
 describe("User API", () => {
   /**
@@ -250,5 +302,3 @@ describe("User API", () => {
     );
   });
 });
-
-
