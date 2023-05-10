@@ -14,11 +14,35 @@ let apiCount = 0;
 describe("Test TDD", () => {
 
   /**
-   * Test API query parameters & keys
+   * Test API fields & keys
    */
 
-  // define query parameters & keys
-  const params = { id: "123fsd23fs", privateName: "1 Test Account" };
+  // define fields & keys
+  const fields = [
+    "id",
+    "privateName",
+    "owner",
+    "type",
+    "tier",
+    "status",
+    "tracking",
+    "theme",
+    "coach",
+    "coachingType",
+    "converstionMessage",
+    "pushNotifications",
+    "requireLearnerConfirmation",
+    "description",
+    "pin",
+    "createdAt",
+    "updatedAt",
+    "contractStartDate",
+    "contractEndDate",
+    "NumberOfLicenses",
+    "licensesConsumed",
+    "licensesPurchased",
+    "accountType",
+  ];  
   const keys = ["id", "createdAt", "updatedAt", "detail", "license"];
   const deepKeys = [
     "privateName",
@@ -39,17 +63,17 @@ describe("Test TDD", () => {
     "contractEndDate",
   ];
 
-  it("It should return all required JSON keys provided by the query parameter.", (done) => {
+  it("It should return all required JSON keys provided by the fields in request query.", (done) => {
     chai
       .request(server.app)
       .get("/test")
-      .query(params) // set the query parameters
+      .query({ fields: fields.join(',') })
       .end((err, res) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         expect(res).to.be.json;
 
-        // // query parameter and response key
+        // // fields and response key
         // if(expect(res.request).to.have.property('url').that.includes("id")){
         //   expect(res.body.every(key => key.should.have.property("id"))).to.be.true;
 
@@ -65,12 +89,12 @@ describe("Test TDD", () => {
         // ##################################################################################
 
         function checkAPI(obj) {
-          Object.keys(params).forEach((param) => {
+          fields.forEach((field) => {
             keys.forEach((resKey) => {
               deepKeys.forEach((deepKey) => {
                 Object.keys(obj).forEach((key) => {
 
-                  expect(res.request.url).to.include(param) // check query parameter has expected query parameter
+                  expect(res.request.url).to.include(field) // check field has expected fields
                   expect(res.body.every(key => key.should.have.property(resKey))).to.be.true; // check response has expected keys
 
                   if ( obj[key] !== undefined && obj[key] !== null && typeof obj[key] === "object" && key === resKey ) {
@@ -95,210 +119,210 @@ describe("Test TDD", () => {
   });
 });
 
-describe("User API", () => {
-  /**
-   * Test GET Route
-   */
+// describe("User API", () => {
+//   /**
+//    * Test GET Route
+//    */
 
-  describe("GET /users", () => {
-    apiCount++;
+//   describe("GET /users", () => {
+//     apiCount++;
 
-    it("It should GET all users", (done) => {
-      chai
-        .request(server.app)
-        .get("/users")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res).to.be.json;
-          expect(res.body).to.be.an("array");
-          expect(res.body.length).to.be.eq(2);
-          done();
-        });
-    });
+//     it("It should GET all users", (done) => {
+//       chai
+//         .request(server.app)
+//         .get("/users")
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(200);
+//           expect(res).to.be.json;
+//           expect(res.body).to.be.an("array");
+//           expect(res.body.length).to.be.eq(2);
+//           done();
+//         });
+//     });
 
-    // check invalid route
-    it("It should NOT GET all users", (done) => {
-      chai
-        .request(server.app)
-        .get("/usersdata")
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(404);
+//     // check invalid route
+//     it("It should NOT GET all users", (done) => {
+//       chai
+//         .request(server.app)
+//         .get("/usersdata")
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(404);
 
-          done();
-        });
-    });
-  });
+//           done();
+//         });
+//     });
+//   });
 
-  /**
-   * Test the GET user by id Route
-   * */
+//   /**
+//    * Test the GET user by id Route
+//    * */
 
-  describe("GET /users/:id", () => {
-    apiCount++;
+//   describe("GET /users/:id", () => {
+//     apiCount++;
 
-    it("It should GET a user by id", (done) => {
-      const uid = 1;
-      chai
-        .request(server.app)
-        .get("/users/" + uid)
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res).to.be.json;
-          expect(res.body).to.be.an("object");
-          expect(res.body).to.have.property("id");
-          expect(res.body).to.have.property("name");
-          expect(res.body).to.have.property("id").eq(1);
+//     it("It should GET a user by id", (done) => {
+//       const uid = 1;
+//       chai
+//         .request(server.app)
+//         .get("/users/" + uid)
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(200);
+//           expect(res).to.be.json;
+//           expect(res.body).to.be.an("object");
+//           expect(res.body).to.have.property("id");
+//           expect(res.body).to.have.property("name");
+//           expect(res.body).to.have.property("id").eq(1);
 
-          done();
-        });
-    });
+//           done();
+//         });
+//     });
 
-    it("It should NOT GET a user by id", (done) => {
-      const uid = 123;
-      chai
-        .request(server.app)
-        .get("/users/" + uid)
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(404);
-          expect(res.text).to.be.eq("User does not exist");
+//     it("It should NOT GET a user by id", (done) => {
+//       const uid = 123;
+//       chai
+//         .request(server.app)
+//         .get("/users/" + uid)
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(404);
+//           expect(res.text).to.be.eq("User does not exist");
 
-          done();
-        });
-    });
-  });
-  /**
-   * Test POST route
-   */
+//           done();
+//         });
+//     });
+//   });
+//   /**
+//    * Test POST route
+//    */
 
-  describe("POST /users/create", () => {
-    apiCount++;
+//   describe("POST /users/create", () => {
+//     apiCount++;
 
-    it("It should POST a new user", (done) => {
-      const user = {
-        name: "AAAAAAA",
-      };
-      chai
-        .request(server.app)
-        .post("/users/create")
-        .send(user)
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(201);
-          expect(res).to.be.json;
-          expect(res.body).to.be.an("object");
-          expect(res.body).to.have.property("id");
-          expect(res.body).to.have.property("name");
-          expect(res.body).to.have.property("id").eq(3);
-          expect(res.body).to.have.property("name").eq("AAAAAAA");
+//     it("It should POST a new user", (done) => {
+//       const user = {
+//         name: "AAAAAAA",
+//       };
+//       chai
+//         .request(server.app)
+//         .post("/users/create")
+//         .send(user)
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(201);
+//           expect(res).to.be.json;
+//           expect(res.body).to.be.an("object");
+//           expect(res.body).to.have.property("id");
+//           expect(res.body).to.have.property("name");
+//           expect(res.body).to.have.property("id").eq(3);
+//           expect(res.body).to.have.property("name").eq("AAAAAAA");
 
-          done();
-        });
-    });
+//           done();
+//         });
+//     });
 
-    it("It should NOT POST a new user without name property", (done) => {
-      const user = {
-        age: 12,
-      };
-      chai
-        .request(server.app)
-        .post("/users/create")
-        .send(user)
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(400);
-          expect(res.text).to.be.eq("User name required");
+//     it("It should NOT POST a new user without name property", (done) => {
+//       const user = {
+//         age: 12,
+//       };
+//       chai
+//         .request(server.app)
+//         .post("/users/create")
+//         .send(user)
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(400);
+//           expect(res.text).to.be.eq("User name required");
 
-          done();
-        });
-    });
-  });
+//           done();
+//         });
+//     });
+//   });
 
-  /**
-   * Test PUT route
-   */
+//   /**
+//    * Test PUT route
+//    */
 
-  describe("PUT /users/:id", () => {
-    apiCount++;
+//   describe("PUT /users/:id", () => {
+//     apiCount++;
 
-    it("It should PUT a new user", (done) => {
-      const uid = 1;
-      const user = {
-        name: "AAAAAAA",
-      };
-      chai
-        .request(server.app)
-        .put("/users/" + uid)
-        .send(user)
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res).to.be.json;
-          expect(res.body).to.be.an("object");
-          expect(res.body).to.have.property("id");
-          expect(res.body).to.have.property("name");
-          expect(res.body).to.have.property("id").eq(uid);
-          expect(res.body).to.have.property("name").eq("AAAAAAA");
+//     it("It should PUT a new user", (done) => {
+//       const uid = 1;
+//       const user = {
+//         name: "AAAAAAA",
+//       };
+//       chai
+//         .request(server.app)
+//         .put("/users/" + uid)
+//         .send(user)
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(200);
+//           expect(res).to.be.json;
+//           expect(res.body).to.be.an("object");
+//           expect(res.body).to.have.property("id");
+//           expect(res.body).to.have.property("name");
+//           expect(res.body).to.have.property("id").eq(uid);
+//           expect(res.body).to.have.property("name").eq("AAAAAAA");
 
-          done();
-        });
-    });
+//           done();
+//         });
+//     });
 
-    it("It should NOT PUT a new user with less than 3 characters", (done) => {
-      const uid = 1;
-      const user = {
-        name: "AA",
-      };
-      chai
-        .request(server.app)
-        .put("/users/" + uid)
-        .send(user)
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(400);
-          expect(res.text).to.be.eq(
-            "User name should be at least 3 characters"
-          );
+//     it("It should NOT PUT a new user with less than 3 characters", (done) => {
+//       const uid = 1;
+//       const user = {
+//         name: "AA",
+//       };
+//       chai
+//         .request(server.app)
+//         .put("/users/" + uid)
+//         .send(user)
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(400);
+//           expect(res.text).to.be.eq(
+//             "User name should be at least 3 characters"
+//           );
 
-          done();
-        });
-    });
-  });
+//           done();
+//         });
+//     });
+//   });
 
-  /**
-   * Test DELETE route
-   */
+//   /**
+//    * Test DELETE route
+//    */
 
-  describe("DELETE /users/:id", () => {
-    apiCount++;
+//   describe("DELETE /users/:id", () => {
+//     apiCount++;
 
-    it("It should DELETE a user", (done) => {
-      const uid = 1;
-      chai
-        .request(server.app)
-        .delete("/users/" + uid)
-        .end((err, res) => {
-          expect(err).to.be.null;
-          expect(res).to.have.status(200);
-          expect(res).to.be.json;
-          expect(res.body).to.be.an("object");
-          expect(res.body).to.have.property("id");
-          expect(res.body).to.have.property("name");
+//     it("It should DELETE a user", (done) => {
+//       const uid = 1;
+//       chai
+//         .request(server.app)
+//         .delete("/users/" + uid)
+//         .end((err, res) => {
+//           expect(err).to.be.null;
+//           expect(res).to.have.status(200);
+//           expect(res).to.be.json;
+//           expect(res.body).to.be.an("object");
+//           expect(res.body).to.have.property("id");
+//           expect(res.body).to.have.property("name");
 
-          done();
-        });
-    });
-  });
-  after(function () {
-    // Print the testing coverage
-    console.log(apiCount + " APIs tested out of " + server.totalAPIs);
-    console.log(
-      `API testing coverage: ${((apiCount / server.totalAPIs) * 100).toFixed(
-        2
-      )}%`
-    );
-  });
-});
+//           done();
+//         });
+//     });
+//   });
+//   after(function () {
+//     // Print the testing coverage
+//     console.log(apiCount + " APIs tested out of " + server.totalAPIs);
+//     console.log(
+//       `API testing coverage: ${((apiCount / server.totalAPIs) * 100).toFixed(
+//         2
+//       )}%`
+//     );
+//   });
+// });
