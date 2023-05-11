@@ -86,7 +86,11 @@ describe("Test TDD", () => {
           });
         }
 
-        res.body.forEach((item) => {
+        res.body.forEach((item, index) => {
+          
+          expect(Object.keys(res.body[index])).to.have.length(5);
+          expect(Object.keys(res.body[index].detail)).to.have.lengthOf(11);
+
           checkAPI(item);
         });
 
